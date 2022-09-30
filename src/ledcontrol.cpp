@@ -7,23 +7,28 @@ in order to turn on the first one ledData should be 00000001
 */
 {
   /*
-  In this loop I am iterating over the input data
-  and setting or cleaning pins according to the truth table
+  this left shifting bitwise algorithm should do a better job.
   */
-  int number = ledData;
-  for (int i = 7; i >= 0; i--) {
-    bit = number % 2;
-    if (bit == 0)
-      {
-        clearPin(pinLedDat_);
-      } else
-      {
+//
+  unsigned int bits = ledData;
+  for (int i = 0 ; i != 8 ; i++) {
+    if (bits & (1 << i)) {
+    // bit == 1
+      clearPin(pinLedDat_);
+    } else {
+        // bit == 0, active level of LED?
         setPin(pinLedDat_);
-      }
-     setPin(pinLedSck_);
-     clearPin(pinLedSck_);
-     number /= 10;
-
+    }
+    setPin(pinLedSck_);
+    clearPin(pinLedSck_);
+}
+//After loop latch activation?
+setPin(pinLedRck_);
+setPin(pinLedSck_);
+clearPin(pinLedSck_);
+clearPin(pinLedRck_);
+setPin(pinLedSck_);
+clearPin(pinLedSck_);
 }
 
 void LedControl::initialize()
